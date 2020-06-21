@@ -1,6 +1,13 @@
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TemplateHaskell #-}
+
 module Main where
 
-import Database.PostgreSQL.PG 
+import Control.Monad.IO.Class
+import Data.Aeson
+import Data.Aeson.TH
+import Database.PostgreSQL.PG
+import Database.PostgreSQL.Simple.FromRow (FromRow(..), field)
 
-main :: IO ()
-main = putStrLn "Hello World" 
+main = putStrLn "ok"
