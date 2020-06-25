@@ -11,7 +11,8 @@ module Database.PostgreSQL.PG (
     query_,
     query1_,
     runPG,
-    withTransaction
+    withTransaction,
+    PG
 ) where
 
 import Prelude hiding (head)
