@@ -9,6 +9,7 @@ module Database.PostgreSQL.PG (
     liftPG,
     query,
     query_,
+    query1,
     query1_,
     runPG,
     withTransaction,
