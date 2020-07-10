@@ -11,6 +11,8 @@ module Database.PostgreSQL.PG (
     query_,
     query1,
     query1_,
+    value1,
+    value1_,
     runPG,
     withTransaction,
     PG
@@ -23,7 +25,8 @@ import Control.Monad.Catch (MonadCatch, MonadThrow)
 import Control.Monad.IO.Class (liftIO, MonadIO)
 import Control.Monad.Reader (ask, MonadReader, ReaderT(..))
 import Data.ByteString (ByteString)
-import Database.PostgreSQL.Simple (Connection, Query, FromRow, ToRow, connectPostgreSQL)
+import Database.PostgreSQL.Simple (Connection, Query, FromRow, ToRow, fromOnly, connectPostgreSQL)
+import Database.PostgreSQL.Simple.FromField (FromField)
 import qualified Database.PostgreSQL.Simple as Postgres
 import GHC.Int (Int64)
 
@@ -61,8 +64,14 @@ query_ = withConn1 Postgres.query_
 query1_ :: (MonadReader Connection m, MonadIO m, MonadThrow m) => FromRow r => Query -> m r 
 query1_ sql = query_ sql >>= head
 
+value1_ :: (MonadReader Connection m, MonadIO m, MonadThrow m, FromField a) => Query -> m a
+value1_ sql = fromOnly <$> query1_ sql
+
 query :: (MonadReader Connection m, MonadIO m) => (ToRow q, FromRow r) => Query -> q -> m [r]
 query = withConn2 Postgres.query 
 
 query1 :: (MonadReader Connection m, MonadIO m, MonadThrow m) => (ToRow q, FromRow r) => Query -> q -> m r 
 query1 sql q = query sql q >>= head
+
+value1 :: (MonadReader Connection m, MonadIO m, MonadThrow m, ToRow q, FromField a) => Query -> q -> m a
+value1 sql q = fromOnly <$> query1 sql q
