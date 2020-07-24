@@ -13,6 +13,8 @@ module Database.PostgreSQL.PG (
     query1_,
     value1,
     value1_,
+    values,
+    values_,
     runPG,
     withTransaction,
     PG
@@ -75,3 +77,9 @@ query1 sql q = query sql q >>= head
 
 value1 :: (MonadReader Connection m, MonadIO m, MonadThrow m, ToRow q, FromField a) => Query -> q -> m a
 value1 sql q = fromOnly <$> query1 sql q
+
+values :: (MonadReader Connection m, MonadIO m, MonadThrow m, ToRow q, FromField a) => Query -> q -> m [a] 
+values sql q = map fromOnly <$> query sql q
+
+values_ :: (MonadReader Connection m, MonadIO m, MonadThrow m, FromField a) => Query -> m [a] 
+values_ sql = map fromOnly <$> query_ sql 
